@@ -19,7 +19,7 @@
         const savedFontSize = localStorage.getItem('gba_font_size') || '16';
         document.documentElement.style.fontSize = savedFontSize + 'px';
         
-        // 全域主題色票庫資料 (支援本機換膚)
+        // 全域主題色票庫資料
         const themePalettes = {
             blue:   { 50: '#f0f7ff', 100: '#e0effe', 500: '#0070f3', 600: '#0061d5', 800: '#00449e', 900: '#0b2545', name: '經典藍' },
             red:    { 50: '#fff5f5', 100: '#ffe3e3', 500: '#fa5252', 600: '#e03131', 800: '#c92a2a', 900: '#491111', name: '熱血紅' },
@@ -31,7 +31,6 @@
             black:  { 50: '#f8fafc', 100: '#e2e8f0', 500: '#64748b', 600: '#475569', 800: '#1e293b', 900: '#0f172a', name: '極致黑' }
         };
 
-        // 搶在最前端讀取並注入本機主題色，避免轉色閃爍
         const savedTheme = localStorage.getItem('gba_theme_color') || 'blue';
         const currentPalette = themePalettes[savedTheme] || themePalettes.blue;
         Object.keys(currentPalette).forEach(key => {
@@ -39,61 +38,25 @@
         });
         
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { 
-                            50: 'var(--theme-50)', 
-                            100: 'var(--theme-100)', 
-                            500: 'var(--theme-500)', 
-                            600: 'var(--theme-600)', 
-                            800: 'var(--theme-800)', 
-                            900: 'var(--theme-900)' 
-                        },
-                        amber: { 500: '#f59e0b', 600: '#d97706' }
-                    }
-                }
-            }
+            theme: { extend: { colors: { brand: { 
+                50: 'var(--theme-50)', 100: 'var(--theme-100)', 500: 'var(--theme-500)', 
+                600: 'var(--theme-600)', 800: 'var(--theme-800)', 900: 'var(--theme-900)' 
+            }, amber: { 500: '#f59e0b', 600: '#d97706' }}}}
         }
     </script>
     <style>
-        html { 
-            -webkit-text-size-adjust: none !important;
-            touch-action: manipulation; 
-        }
-        body, html {
-            width: 100%; height: 100%;
-            position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-            margin: 0; padding: 0; overflow: hidden;
-            background-color: var(--theme-900) !important;
-            transition: background 0.3s ease;
-        }
-        #app-layout {
-            display: flex; flex-direction: column;
-            position: absolute; top: 0; bottom: 0; left: 0; right: 0;
-            width: 100%; height: 100%; background-color: #f8fafc; overflow: hidden;
-        }
-        .lock-text-size {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-            -webkit-text-size-adjust: none !important;
-        }
+        html { -webkit-text-size-adjust: none !important; touch-action: manipulation; }
+        body, html { width: 100%; height: 100%; position: fixed; top: 0; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; overflow: hidden; background-color: var(--theme-900) !important; transition: background 0.3s ease; }
+        #app-layout { display: flex; flex-direction: column; position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%; background-color: #f8fafc; overflow: hidden; }
+        .lock-text-size { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; -webkit-text-size-adjust: none !important; }
         .safe-top { height: env(safe-area-inset-top); width: 100%; background-color: var(--theme-900) !important; flex-shrink: 0; transition: background 0.3s ease; }
         header { background-color: var(--theme-900) !important; transition: background 0.3s ease; }
-        
         input[type=range] { -webkit-appearance: none; background: transparent; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
-            background: #ffffff; border: 2px solid var(--theme-500); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-top: -8px; cursor: pointer;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 2px;
-        }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; border: 2px solid var(--theme-500); box-shadow: 0 2px 5px rgba(0,0,0,0.2); margin-top: -8px; cursor: pointer; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 2px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .admin-only { display: none; }
-        @keyframes pulse-gold { 0%, 100% { filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); } 50% { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.9)); } }
-        .glow-gold { animation: pulse-gold 2s infinite; }
     </style>
 </head>
 
@@ -149,7 +112,6 @@
         </div>
 
         <main class="flex-1 overflow-y-auto p-4 pb-6 no-scrollbar relative" id="main-content">
-            
             <section id="tab-dashboard" class="space-y-4">
                 <div class="bg-gradient-to-br from-brand-900 to-brand-800 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
                     <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-4 translate-y-4">
@@ -208,15 +170,15 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="text-[0.65rem] font-bold text-slate-500 block mb-1">旅行天數</label>
-                            <input type="text" id="input-dash-days" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="如: 8 天">
+                            <input type="text" id="input-dash-days" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                         <div>
                             <label class="text-[0.65rem] font-bold text-slate-500 block mb-1">計畫跨城</label>
-                            <input type="text" id="input-dash-cities" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="如: 4 城">
+                            <input type="text" id="input-dash-cities" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                         <div>
                             <label class="text-[0.65rem] font-bold text-slate-500 block mb-1">交通工具</label>
-                            <input type="text" id="input-dash-transport" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="如: 自駕">
+                            <input type="text" id="input-dash-transport" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                     </div>
                     <button onclick="updateDashboardInfo()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-xs transition active:scale-95 shadow-sm">發布更新基本指標</button>
@@ -259,22 +221,22 @@
                     <div class="grid grid-cols-1 gap-2 mb-1">
                         <div>
                             <label class="text-[10px] text-slate-400 block mb-0.5">本日行程總標題</label>
-                            <input type="text" id="input-day-main-title" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="例: Day 1 - 抵達廣州 & 搶辦門號">
+                            <input type="text" id="input-day-main-title" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <label class="text-[10px] text-slate-400 block mb-0.5">日期 (可改)</label>
-                            <input type="text" id="input-day-date" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="例: 6/27">
+                            <label class="text-[10px] text-slate-400 block mb-0.5">日期</label>
+                            <input type="text" id="input-day-date" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-400 block mb-0.5">當前城市</label>
-                            <input type="text" id="input-day-city" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="城市">
+                            <input type="text" id="input-day-city" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-400 block mb-0.5">住宿酒店</label>
-                            <input type="text" id="input-day-hotel" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white" placeholder="住宿酒店">
+                            <input type="text" id="input-day-hotel" class="w-full px-2 py-1.5 text-[0.8rem] border rounded-lg bg-slate-50 focus:bg-white">
                         </div>
                     </div>
                     <button onclick="updateDayInfo()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-1.5 rounded-lg text-xs transition active:scale-90">保存本日全域資訊與大綱變更</button>
@@ -444,13 +406,21 @@
 
     <script>
         // ==========================================
-        // 1. 全域變數與預設資料
+        // 1. 全域變數與預設資料定義 (最優先讀取)
         // ==========================================
-        let isAdmin = false; let activeDay = 1; let editEventIndex = -1;
-        let tripDays = {}; let guideData = []; let userExpenses = []; let packingItems = []; let activeGuideTab = ""; let tripWarning = {};
+        let isAdmin = false; 
+        let activeDay = 1; 
+        let editEventIndex = -1;
+        let activeGuideTab = "";
+        
+        let tripDays = {}; 
+        let guideData = []; 
+        let userExpenses = []; 
+        let packingItems = []; 
+        let tripWarning = {};
+        let dashboardInfo = {};
         let budgetMembers = ['我', '伴侶'];
         let deviceTheme = localStorage.getItem('gba_theme_color') || 'blue';
-        let dashboardInfo = {};
 
         const defaultDashboardInfo = { 
             title: "大灣區旅遊助手", 
@@ -535,8 +505,20 @@
             { name: "衛生紙、濕巾", checked: false, group: "hygiene" }, { name: "酒精", checked: false, group: "hygiene" }, { name: "刮鬍刀", checked: false, group: "hygiene" }, { name: "藥品組 (感冒、防暈、常備藥)", checked: false, group: "hygiene" }, { name: "耳塞", checked: false, group: "hygiene" }, { name: "眼罩", checked: false, group: "hygiene" }, { name: "頸枕", checked: false, group: "hygiene" }
         ];
 
+        const icons = { 
+            ship: '<i class="fa-solid fa-ship"></i>', sim: '<i class="fa-solid fa-mobile-screen-button"></i>', 
+            hotel: '<i class="fa-solid fa-hotel"></i>', night: '<i class="fa-solid fa-moon"></i>', 
+            camera: '<i class="fa-solid fa-camera"></i>', food: '<i class="fa-solid fa-utensils"></i>', 
+            bank: '<i class="fa-solid fa-building-columns"></i>', license: '<i class="fa-solid fa-address-card"></i>', 
+            car: '<i class="fa-solid fa-car-side"></i>', speed: '<i class="fa-solid fa-gauge-high"></i>', 
+            kart: '<i class="fa-solid fa-motorcycle"></i>', landmark: '<i class="fa-solid fa-archway"></i>', 
+            bridge: '<i class="fa-solid fa-bridge"></i>', ski: '<i class="fa-solid fa-person-skiing"></i>', 
+            shopping: '<i class="fa-solid fa-bag-shopping"></i>', plane: '<i class="fa-solid fa-plane"></i>', 
+            train: '<i class="fa-solid fa-train"></i>', temple: '<i class="fa-solid fa-gopuram"></i>'
+        };
+
         // ==========================================
-        // 2. 安全防護與 UI 輔助
+        // 2. 輔助函數與 UI 操作
         // ==========================================
         function escapeHTML(str) {
             if (!str) return '';
@@ -546,112 +528,32 @@
             });
         }
 
+        function showToast(m, w=false) { 
+            const t = document.getElementById('custom-toast'); 
+            document.getElementById('toast-message-text').innerText = m; 
+            t.classList.remove('hidden'); 
+            setTimeout(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; }, 50); 
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 300); }, 2000); 
+        }
+
         function toggleFontSlider() {
             const popup = document.getElementById('font-slider-popup');
-            popup.classList.toggle('hidden');
+            if(popup) popup.classList.toggle('hidden');
         }
 
-        // ==========================================
-        // 3. 初始化與純本機資料載入 (Local Storage)
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            const slider = document.getElementById('font-size-slider');
-            if (slider) {
-                slider.value = localStorage.getItem('gba_font_size') || '16';
-                slider.addEventListener('input', function() {
-                    document.documentElement.style.fontSize = this.value + 'px';
-                    localStorage.setItem('gba_font_size', this.value);
-                });
-            }
-            loadLocalData(); 
-        });
-
-        document.addEventListener('touchstart', function (event) { if (event.touches.length > 1) event.preventDefault(); }, { passive: false });
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) event.preventDefault();
-            lastTouchEnd = now;
-        }, { passive: false });
-        document.addEventListener('gesturestart', function (event) { event.preventDefault(); });
-
-        document.addEventListener('focusin', function(e) {
-            if(['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                document.getElementById('bottom-nav').style.display = 'none';
-            }
-        });
-        document.addEventListener('focusout', function(e) {
-            if(['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                setTimeout(() => { document.getElementById('bottom-nav').style.display = ''; }, 50);
-            }
-        });
-
-        // 取代 Firebase，改為從 localStorage 讀取
-        function loadLocalData() {
-            try {
-                // 1. 讀取行程與全域設定
-                const localTrip = localStorage.getItem('gba_trip_data');
-                if (localTrip) {
-                    const parsed = JSON.parse(localTrip);
-                    tripDays = parsed.tripDays || JSON.parse(JSON.stringify(defaultTripDays));
-                    guideData = parsed.guideData || JSON.parse(JSON.stringify(defaultGuides));
-                    tripWarning = parsed.tripWarning || JSON.parse(JSON.stringify(defaultTripWarning));
-                    dashboardInfo = parsed.dashboardInfo || JSON.parse(JSON.stringify(defaultDashboardInfo));
-                } else {
-                    tripDays = JSON.parse(JSON.stringify(defaultTripDays)); 
-                    guideData = JSON.parse(JSON.stringify(defaultGuides)); 
-                    tripWarning = JSON.parse(JSON.stringify(defaultTripWarning));
-                    dashboardInfo = JSON.parse(JSON.stringify(defaultDashboardInfo));
-                }
-
-                // 2. 讀取記帳本資料
-                const localBudget = localStorage.getItem('gba_budget_data');
-                if (localBudget) {
-                    const parsed = JSON.parse(localBudget);
-                    userExpenses = parsed.expenses || [];
-                    budgetMembers = parsed.members || ['我', '伴侶'];
-                } else {
-                    userExpenses = [];
-                    budgetMembers = ['我', '伴侶'];
-                }
-
-            } catch (error) {
-                console.error("本機資料解析異常，載入預設還原模式:", error);
-                tripDays = JSON.parse(JSON.stringify(defaultTripDays)); 
-                guideData = JSON.parse(JSON.stringify(defaultGuides)); 
-                tripWarning = JSON.parse(JSON.stringify(defaultTripWarning));
-                dashboardInfo = JSON.parse(JSON.stringify(defaultDashboardInfo));
-                userExpenses = []; budgetMembers = ['我', '伴侶'];
-            }
-
-            initAppRender();
-            renderBudget();
-            if (isAdmin) renderThemePicker();
+        function switchTab(tabId) {
+            ['dashboard', 'itinerary', 'guides', 'packing', 'budget'].forEach(tab => {
+                const el = document.getElementById(`tab-${tab}`);
+                if(el) el.classList.toggle('hidden', tab !== tabId);
+                const navBtn = document.getElementById(`nav-${tab}`);
+                if(navBtn) navBtn.className = (tab === tabId) 
+                    ? "flex flex-col items-center justify-center flex-1 text-brand-500 transition-all active:scale-90 active:opacity-75" 
+                    : "flex flex-col items-center justify-center flex-1 text-slate-400 transition-all active:scale-90 active:opacity-75";
+            });
+            const mainContent = document.getElementById('main-content');
+            if(mainContent) mainContent.scrollTop = 0;
         }
 
-        // 取代 pushTripDataToCloud，存到 localStorage
-        function saveLocalTripData() { 
-            localStorage.setItem('gba_trip_data', JSON.stringify({ tripDays, guideData, tripWarning, dashboardInfo })); 
-        }
-
-        // 取代 pushBudgetDataToCloud，存到 localStorage
-        function saveLocalBudgetData() { 
-            localStorage.setItem('gba_budget_data', JSON.stringify({ expenses: userExpenses, members: budgetMembers })); 
-            renderBudget();
-        }
-
-        function loadLocalPackingList() {
-            const localData = localStorage.getItem('gba_personal_packing');
-            if (localData) { packingItems = JSON.parse(localData); } 
-            else { packingItems = JSON.parse(JSON.stringify(defaultPackingItems)); saveLocalPackingList(); }
-            renderPackingChecklist();
-        }
-
-        function saveLocalPackingList() { localStorage.setItem('gba_personal_packing', JSON.stringify(packingItems)); }
-
-        // ==========================================
-        // 4. 核心邏輯與 UI 渲染
-        // ==========================================
         function toggleAdminAuth() {
             if (!isAdmin) {
                 const pin = prompt("請輸入您的本機解鎖代碼\n(直接按確定即可解鎖)：");
@@ -689,7 +591,8 @@
             document.querySelectorAll('.admin-only').forEach(el => { el.style.display = show ? 'block' : 'none'; });
             cancelEditTripEvent();
             clearGuideInputs();
-            renderItineraryPage(); renderGuidesPage();
+            renderItineraryPage(); 
+            renderGuidesPage();
             if (show) renderThemePicker();
         }
 
@@ -697,17 +600,13 @@
             const container = document.getElementById('theme-picker-container');
             if (!container) return;
             container.innerHTML = '';
-            
             Object.keys(themePalettes).forEach(key => {
                 const p = themePalettes[key];
                 const btn = document.createElement('button');
                 btn.onclick = () => changeDeviceTheme(key);
                 const isCurrent = (deviceTheme === key);
                 btn.className = `flex flex-col items-center justify-center p-2 rounded-xl border text-center transition active:scale-95 ${isCurrent ? 'border-slate-800 bg-slate-100 font-bold shadow-sm' : 'border-slate-200 bg-slate-50'}`;
-                btn.innerHTML = `
-                    <span class="w-5 h-5 rounded-full block shadow-sm mb-1" style="background-color: ${p['500']}"></span>
-                    <span class="text-[11px] text-slate-700">${p.name}</span>
-                `;
+                btn.innerHTML = `<span class="w-5 h-5 rounded-full block shadow-sm mb-1" style="background-color: ${p['500']}"></span><span class="text-[11px] text-slate-700">${p.name}</span>`;
                 container.appendChild(btn);
             });
         }
@@ -715,24 +614,18 @@
         function changeDeviceTheme(themeKey) {
             deviceTheme = themeKey;
             localStorage.setItem('gba_theme_color', themeKey);
-            
             const palette = themePalettes[themeKey];
             const root = document.documentElement;
             Object.keys(palette).forEach(key => {
                 if(key !== 'name') root.style.setProperty(`--theme-${key}`, palette[key]);
             });
-            
             renderThemePicker();
             showToast(`本地裝置色彩已切換為：${themePalettes[themeKey].name}`);
         }
 
-        function resetPersonalPackingList() {
-            if(confirm("確定要將本機的打包清單恢復成預設狀態嗎？\n(這會清除您自行新增的私人物品，並還原所有打勾狀態)")) {
-                packingItems = JSON.parse(JSON.stringify(defaultPackingItems));
-                saveLocalPackingList(); renderPackingChecklist(); showToast("個人打包清單已重置！");
-            }
-        }
-
+        // ==========================================
+        // 3. 渲染函數 Render Functions
+        // ==========================================
         function initAppRender() { 
             renderDashboard(); 
             renderItineraryPage(); 
@@ -740,36 +633,13 @@
             loadLocalPackingList(); 
         }
 
-        function switchTab(tabId) {
-            ['dashboard', 'itinerary', 'guides', 'packing', 'budget'].forEach(tab => {
-                document.getElementById(`tab-${tab}`).classList.toggle('hidden', tab !== tabId);
-                const navBtn = document.getElementById(`nav-${tab}`);
-                if(navBtn) navBtn.className = (tab === tabId) 
-                    ? "flex flex-col items-center justify-center flex-1 text-brand-500 transition-all active:scale-90 active:opacity-75" 
-                    : "flex flex-col items-center justify-center flex-1 text-slate-400 transition-all active:scale-90 active:opacity-75";
-            });
-            document.getElementById('main-content').scrollTop = 0;
-        }
-
-        const icons = { 
-            ship: '<i class="fa-solid fa-ship"></i>', sim: '<i class="fa-solid fa-mobile-screen-button"></i>', 
-            hotel: '<i class="fa-solid fa-hotel"></i>', night: '<i class="fa-solid fa-moon"></i>', 
-            camera: '<i class="fa-solid fa-camera"></i>', food: '<i class="fa-solid fa-utensils"></i>', 
-            bank: '<i class="fa-solid fa-building-columns"></i>', license: '<i class="fa-solid fa-address-card"></i>', 
-            car: '<i class="fa-solid fa-car-side"></i>', speed: '<i class="fa-solid fa-gauge-high"></i>', 
-            kart: '<i class="fa-solid fa-motorcycle"></i>', landmark: '<i class="fa-solid fa-archway"></i>', 
-            bridge: '<i class="fa-solid fa-bridge"></i>', ski: '<i class="fa-solid fa-person-skiing"></i>', 
-            shopping: '<i class="fa-solid fa-bag-shopping"></i>', plane: '<i class="fa-solid fa-plane"></i>', 
-            train: '<i class="fa-solid fa-train"></i>', temple: '<i class="fa-solid fa-gopuram"></i>'
-        };
-
         function renderDashboard() {
             if (!dashboardInfo) return;
-            document.getElementById('dashboard-hero-title').innerText = dashboardInfo.title || "大灣區旅遊助手";
-            document.getElementById('dashboard-hero-desc').innerText = dashboardInfo.desc || "";
-            document.getElementById('dash-stat-days').innerText = dashboardInfo.days || "8 天";
-            document.getElementById('dash-stat-cities').innerText = dashboardInfo.cities || "4 城";
-            document.getElementById('dash-stat-transport').innerText = dashboardInfo.transport || "自駕/高鐵";
+            const elHeroTitle = document.getElementById('dashboard-hero-title'); if(elHeroTitle) elHeroTitle.innerText = dashboardInfo.title || "大灣區旅遊助手";
+            const elHeroDesc = document.getElementById('dashboard-hero-desc'); if(elHeroDesc) elHeroDesc.innerText = dashboardInfo.desc || "";
+            const elDays = document.getElementById('dash-stat-days'); if(elDays) elDays.innerText = dashboardInfo.days || "8 天";
+            const elCities = document.getElementById('dash-stat-cities'); if(elCities) elCities.innerText = dashboardInfo.cities || "4 城";
+            const elTrans = document.getElementById('dash-stat-transport'); if(elTrans) elTrans.innerText = dashboardInfo.transport || "自駕/高鐵";
 
             if(document.getElementById('input-dash-title')) document.getElementById('input-dash-title').value = dashboardInfo.title || "";
             if(document.getElementById('input-dash-desc')) document.getElementById('input-dash-desc').value = dashboardInfo.desc || "";
@@ -790,144 +660,21 @@
                 });
             }
             if(tripWarning) {
-                document.getElementById('dashboard-warning-title').innerText = tripWarning.title || "";
-                document.getElementById('dashboard-warning-desc').innerText = tripWarning.desc || "";
+                const warnTitle = document.getElementById('dashboard-warning-title'); if(warnTitle) warnTitle.innerText = tripWarning.title || "";
+                const warnDesc = document.getElementById('dashboard-warning-desc'); if(warnDesc) warnDesc.innerText = tripWarning.desc || "";
                 if(document.getElementById('input-warn-title')) document.getElementById('input-warn-title').value = tripWarning.title || "";
                 if(document.getElementById('input-warn-desc')) document.getElementById('input-warn-desc').value = tripWarning.desc || "";
             }
         }
 
-        function updateDashboardInfo() {
-            if(!isAdmin) return;
-            dashboardInfo.title = document.getElementById('input-dash-title').value.trim();
-            dashboardInfo.desc = document.getElementById('input-dash-desc').value.trim();
-            dashboardInfo.days = document.getElementById('input-dash-days').value.trim();
-            dashboardInfo.cities = document.getElementById('input-dash-cities').value.trim();
-            dashboardInfo.transport = document.getElementById('input-dash-transport').value.trim();
-            saveLocalTripData(); renderDashboard(); showToast("首頁大盤指標資訊已更新！");
-        }
-
-        function updateWarning() {
-            if(!isAdmin) return;
-            tripWarning.title = document.getElementById('input-warn-title').value.trim();
-            tripWarning.desc = document.getElementById('input-warn-desc').value.trim();
-            saveLocalTripData(); showToast("注意事項已更新！");
-        }
-
-        function swapDay(dir) {
-            if(!isAdmin) return;
-            let currentNum = parseInt(activeDay);
-            let total = Object.keys(tripDays).length;
-            let targetNum = currentNum + dir;
-            if (targetNum > total) targetNum = 1; if (targetNum < 1) targetNum = total;
-            
-            const curData = tripDays[currentNum]; const targetData = tripDays[targetNum];
-            const tempTitle = curData.title; const tempCity = curData.city; const tempHotel = curData.hotel; const tempEvents = curData.events || [];
-            
-            curData.title = targetData.title; curData.city = targetData.city; curData.hotel = targetData.hotel; curData.events = targetData.events || [];
-            targetData.title = tempTitle; targetData.city = tempCity; targetData.hotel = tempHotel; targetData.events = tempEvents;
-            
-            activeDay = targetNum; saveLocalTripData(); showToast(`Day ${currentNum} 與 Day ${targetNum} 完整對調！`);
-            renderDashboard(); renderItineraryPage();
-        }
-
-        function addNewDay() {
-            if(!isAdmin) return;
-            const total = Object.keys(tripDays).length;
-            const newNum = total + 1;
-            tripDays[newNum] = { date: "", title: `Day ${newNum} - 新行程大綱`, city: "新城市", hotel: "未定", events: [] };
-            activeDay = newNum; saveLocalTripData(); showToast(`已成功新增 Day ${newNum}`);
-            renderDashboard(); renderItineraryPage();
-        }
-
-        function removeCurrentDay() {
-            if(!isAdmin) return;
-            const total = Object.keys(tripDays).length;
-            if(total <= 1) { showToast("至少需保留一天行程！", true); return; }
-            
-            if(confirm(`確定要刪除當前的 Day ${activeDay} 行程嗎？\n(後續天數會自動向前遞補，結構完美不中斷)`)) {
-                let newTripDays = {};
-                let newIndex = 1;
-                
-                for(let i = 1; i <= total; i++) {
-                    if(i === parseInt(activeDay)) continue;
-                    newTripDays[String(newIndex)] = tripDays[String(i)] || tripDays[i];
-                    if(newTripDays[String(newIndex)].title && newTripDays[String(newIndex)].title.startsWith("Day ")) {
-                        newTripDays[String(newIndex)].title = newTripDays[String(newIndex)].title.replace(/^Day \d+/, `Day ${newIndex}`);
-                    }
-                    newIndex++;
-                }
-                
-                tripDays = newTripDays;
-                if(activeDay > Object.keys(tripDays).length) { activeDay = Object.keys(tripDays).length; }
-                
-                saveLocalTripData(); showToast("此天行程已移除，後續天數自動前移！");
-                renderDashboard(); renderItineraryPage();
-            }
-        }
-
-        function exportToMarkdown() {
-            if(!isAdmin) return;
-            let md = `# ${dashboardInfo.title || '大灣區旅遊助手'}\n\n`;
-            md += `${dashboardInfo.desc || ''}\n\n`;
-            md += `- **旅行天數:** ${dashboardInfo.days || '8 天'}\n- **計畫跨城:** ${dashboardInfo.cities || '4 城'}\n- **交通工具:** ${dashboardInfo.transport || '自駕/高鐵'}\n\n`;
-
-            const totalDays = Object.keys(tripDays).length;
-            md += `## 📅 詳細行程\n\n`;
-            for(let i=1; i<=totalDays; i++) {
-                if(!tripDays[i]) continue;
-                const d = tripDays[i];
-                md += `### ${d.title || `Day ${i} (${d.city})`}\n`;
-                if(d.hotel) md += `**住宿:** ${d.hotel}\n\n`;
-                if(d.events && d.events.length > 0) {
-                    d.events.forEach(evt => {
-                        md += `- **${evt.time}** | ${evt.isTask ? '⭐ ' : ''}${evt.title}\n`;
-                        if(evt.desc) md += `    > ${evt.desc.replace(/\n/g, '\n    > ')}\n`;
-                    });
-                } else { md += `- 尚無排定細節\n`; }
-                md += `\n`;
-            }
-            md += `## 💰 記帳總覽\n\n`;
-            let totalExpense = 0; let payerTotals = {}; budgetMembers.forEach(m => payerTotals[m] = 0);
-            userExpenses.forEach(item => {
-                totalExpense += item.cost; if (payerTotals[item.payer] === undefined) payerTotals[item.payer] = 0; payerTotals[item.payer] += item.cost;
-            });
-            md += `- **整趟總花費:** NT$ ${totalExpense.toLocaleString()}\n`;
-            Object.keys(payerTotals).forEach(m => { if(payerTotals[m] > 0 || budgetMembers.includes(m)) md += `- ${m} 共支付: NT$ ${payerTotals[m].toLocaleString()}\n`; });
-            md += `\n---\n*由大灣區旅遊助手自動匯出*`;
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(md).then(() => { showToast("Markdown 已複製！可前往 Notion 貼上。"); })
-                    .catch(err => { fallbackCopyText(md); });
-            } else {
-                fallbackCopyText(md);
-            }
-        }
-
-        function fallbackCopyText(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast("Markdown 已複製！(相容模式)");
-            } catch (err) {
-                showToast("複製失敗，請檢查權限。", true);
-                console.error(err);
-            }
-            document.body.removeChild(textArea);
-        }
-
         function renderItineraryPage() {
-            const container = document.getElementById('day-details-container'); const dayData = tripDays[activeDay]; 
+            const container = document.getElementById('day-details-container'); 
+            const dayData = tripDays[activeDay]; 
             if(!dayData) {
                 if(container) container.innerHTML = `<div class="text-center py-12 text-sm text-slate-400">數據渲染中...</div>`;
                 return;
             }
-            document.getElementById('current-city-indicator').innerText = `當前城市：${dayData.city || ''}`;
+            const ind = document.getElementById('current-city-indicator'); if(ind) ind.innerText = `當前城市：${dayData.city || ''}`;
             
             if(document.getElementById('input-day-date')) document.getElementById('input-day-date').value = dayData.date || '';
             if(document.getElementById('input-day-city')) document.getElementById('input-day-city').value = dayData.city || '';
@@ -935,13 +682,16 @@
             if(document.getElementById('input-day-main-title')) document.getElementById('input-day-main-title').value = dayData.title || '';
 
             const totalDays = Object.keys(tripDays).length;
-            const navBar = document.getElementById('day-nav-bar'); navBar.innerHTML = '';
-            for (let i = 1; i <= totalDays; i++) {
-                const d = tripDays[i] || { date: '未定', city: '' }; 
-                const btn = document.createElement('button'); btn.onclick = () => setActiveDay(i);
-                btn.className = (i === activeDay) ? "shrink-0 px-3.5 py-2 rounded-xl text-center border font-bold text-[12px] bg-brand-900 text-white border-brand-900 transition active:scale-95" : "shrink-0 px-3.5 py-2 rounded-xl text-center border font-bold text-[12px] bg-white text-slate-500 border-slate-200 transition active:scale-95";
-                btn.innerHTML = `Day ${i}<br><span class="text-[12px] font-normal opacity-80 mt-0.5 block">${d.date || ''} ${d.city || ''}</span>`;
-                navBar.appendChild(btn);
+            const navBar = document.getElementById('day-nav-bar'); 
+            if(navBar) {
+                navBar.innerHTML = '';
+                for (let i = 1; i <= totalDays; i++) {
+                    const d = tripDays[i] || { date: '未定', city: '' }; 
+                    const btn = document.createElement('button'); btn.onclick = () => setActiveDay(i);
+                    btn.className = (i === activeDay) ? "shrink-0 px-3.5 py-2 rounded-xl text-center border font-bold text-[12px] bg-brand-900 text-white border-brand-900 transition active:scale-95" : "shrink-0 px-3.5 py-2 rounded-xl text-center border font-bold text-[12px] bg-white text-slate-500 border-slate-200 transition active:scale-95";
+                    btn.innerHTML = `Day ${i}<br><span class="text-[12px] font-normal opacity-80 mt-0.5 block">${d.date || ''} ${d.city || ''}</span>`;
+                    navBar.appendChild(btn);
+                }
             }
 
             let htmlContent = `
@@ -953,8 +703,9 @@
                 <div class="relative pl-6 border-l-2 border-slate-200 space-y-4 ml-3">
             `;
             
-            if (!dayData.events || dayData.events.length === 0) { htmlContent += `<p class="text-[0.85rem] text-slate-400 py-4">本日尚無排定細節。</p>`; }
-            else {
+            if (!dayData.events || dayData.events.length === 0) { 
+                htmlContent += `<p class="text-[0.85rem] text-slate-400 py-4">本日尚無排定細節。</p>`; 
+            } else {
                 dayData.events.forEach((evt, idx) => {
                     const iconSvg = icons[evt.icon] || '<i class="fa-solid fa-circle text-[0.75rem]"></i>';
                     let cardClass = evt.isTask ? "bg-amber-50/70 p-4 rounded-xl border-2 border-amber-200 relative" : "bg-white p-4 rounded-xl border border-slate-100 relative";
@@ -980,128 +731,26 @@
                         </div>`;
                 });
             }
-            container.innerHTML = htmlContent + `</div>`;
-        }
-
-        function editTripEvent(idx) {
-            if(!isAdmin) return;
-            const evt = tripDays[activeDay].events[idx];
-            document.getElementById('input-evt-time').value = evt.time || '隨時';
-            document.getElementById('input-evt-title').value = evt.title || '';
-            document.getElementById('input-evt-icon').value = evt.icon || 'landmark';
-            document.getElementById('input-evt-task').value = evt.isTask ? 'true' : 'false';
-            document.getElementById('input-evt-desc').value = evt.desc || '';
-            editEventIndex = idx;
-            
-            document.getElementById('label-add-edit').innerText = "編輯目前行程活動項目";
-            const btn = document.getElementById('btn-submit-evt');
-            btn.innerHTML = '儲存活動修改';
-            btn.className = 'flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-sm transition active:scale-95 shadow-sm';
-            document.getElementById('btn-cancel-evt').classList.remove('hidden');
-            document.getElementById('input-evt-time').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        function cancelEditTripEvent() {
-            editEventIndex = -1;
-            if(document.getElementById('input-evt-time')) document.getElementById('input-evt-time').value = '';
-            if(document.getElementById('input-evt-title')) document.getElementById('input-evt-title').value = '';
-            if(document.getElementById('input-evt-desc')) document.getElementById('input-evt-desc').value = '';
-            if(document.getElementById('label-add-edit')) document.getElementById('label-add-edit').innerText = "在當前天數新增行程";
-            
-            const btn = document.getElementById('btn-submit-evt');
-            if(btn) {
-                btn.innerHTML = '加入今日計畫';
-                btn.className = 'flex-1 bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-sm transition active:scale-95 shadow-sm';
-            }
-            const cancelBtn = document.getElementById('btn-cancel-evt'); if(cancelBtn) cancelBtn.classList.add('hidden');
-        }
-
-        function moveTripEvent(idx, dir) {
-            if(!isAdmin) return;
-            const events = tripDays[activeDay].events;
-            if (dir === -1 && idx > 0) { [events[idx], events[idx - 1]] = [events[idx - 1], events[idx]]; } 
-            else if (dir === 1 && idx < events.length - 1) { [events[idx], events[idx + 1]] = [events[idx + 1], events[idx]]; }
-            saveLocalTripData();
-            renderItineraryPage();
-        }
-
-        function updateDayInfo() {
-            if(!isAdmin) return;
-            const newDate = document.getElementById('input-day-date').value.trim();
-            const newCity = document.getElementById('input-day-city').value.trim();
-            const newHotel = document.getElementById('input-day-hotel').value.trim();
-            const newTitle = document.getElementById('input-day-main-title').value.trim();
-            
-            if(newDate) tripDays[activeDay].date = newDate;
-            if(newCity) tripDays[activeDay].city = newCity;
-            if(newHotel) tripDays[activeDay].hotel = newHotel;
-            if(newTitle) tripDays[activeDay].title = newTitle;
-            
-            saveLocalTripData(); showToast("全域大綱變更發布同步！");
-            renderDashboard(); renderItineraryPage();
-        }
-
-        function addTripEvent() {
-            if(!isAdmin) return; 
-            const titleVal = document.getElementById('input-evt-title').value.trim(); 
-            if (!titleVal) { showToast("請填寫活動項目名稱！", true); return; }
-            
-            const newEvt = { 
-                title: titleVal,
-                time: document.getElementById('input-evt-time').value.trim() || "隨時", 
-                icon: document.getElementById('input-evt-icon').value || "landmark", 
-                isTask: document.getElementById('input-evt-task').value === "true", 
-                desc: document.getElementById('input-evt-desc').value.trim() 
-            };
-
-            if (editEventIndex > -1) {
-                tripDays[activeDay].events[editEventIndex] = newEvt;
-                cancelEditTripEvent(); showToast("活動項目已成功儲存更新！");
-            } else {
-                if(!tripDays[activeDay].events) tripDays[activeDay].events = [];
-                tripDays[activeDay].events.push(newEvt);
-                document.getElementById('input-evt-title').value = ''; 
-                document.getElementById('input-evt-desc').value = '';
-                document.getElementById('input-evt-time').value = '';
-                showToast("已加入今天的新計畫！");
-            }
-            saveLocalTripData(); renderItineraryPage();
-        }
-
-        function deleteTripEvent(idx) { 
-            if(!isAdmin) return; 
-            if(confirm("確定要刪除此項活動嗎？")) { tripDays[activeDay].events.splice(idx, 1); saveLocalTripData(); renderItineraryPage(); }
-        }
-
-        function clearGuideInputs() {
-            if(document.getElementById('input-guide-title')) document.getElementById('input-guide-title').value = '';
-            if(document.getElementById('input-guide-desc')) document.getElementById('input-guide-desc').value = '';
-            if(document.getElementById('input-guide-s1')) document.getElementById('input-guide-s1').value = '';
-            if(document.getElementById('input-guide-s2')) document.getElementById('input-guide-s2').value = '';
-        }
-
-        function loadGuideForEdit(id) {
-            if(!isAdmin) return; activeGuideTab = id; const g = guideData.find(x => x.id === id);
-            if(g) {
-                document.getElementById('input-guide-title').value = g.title;
-                document.getElementById('input-guide-desc').value = g.desc || '';
-                document.getElementById('input-guide-s1').value = g.s1 || '';
-                document.getElementById('input-guide-s2').value = g.s2 || '';
-                document.getElementById('input-guide-title').scrollIntoView({behavior: 'smooth', block: 'center'});
-                showToast("攻略已載入，可於下方表單開始編輯！"); renderGuidesPage();
-            }
+            if(container) container.innerHTML = htmlContent + `</div>`;
         }
 
         function renderGuidesPage() {
-            const tabsBar = document.getElementById('guide-tabs-bar'); const contentsContainer = document.getElementById('guide-contents-container'); tabsBar.innerHTML = ''; contentsContainer.innerHTML = '';
-            if (guideData.length === 0) return; if (!activeGuideTab || !guideData.some(g => g.id === activeGuideTab)) activeGuideTab = guideData[0].id;
+            const tabsBar = document.getElementById('guide-tabs-bar'); 
+            const contentsContainer = document.getElementById('guide-contents-container'); 
+            if(tabsBar) tabsBar.innerHTML = ''; 
+            if(contentsContainer) contentsContainer.innerHTML = '';
+            
+            if (guideData.length === 0) return; 
+            if (!activeGuideTab || !guideData.some(g => g.id === activeGuideTab)) activeGuideTab = guideData[0].id;
+            
             guideData.forEach((g, index) => {
                 const btn = document.createElement('button'); btn.onclick = () => { activeGuideTab = g.id; renderGuidesPage(); };
                 btn.className = (g.id === activeGuideTab) ? "shrink-0 text-center py-2 px-4 text-[12px] font-bold rounded-lg bg-white text-slate-800 shadow-sm transition active:scale-95" : "shrink-0 text-center py-2 px-4 text-[12px] font-bold rounded-lg text-slate-600 transition active:scale-95";
                 const displayTitle = g.title.replace(/^\d+\.\s*/, '');
-                btn.innerText = `${index + 1}. ${displayTitle}`; tabsBar.appendChild(btn);
+                btn.innerText = `${index + 1}. ${displayTitle}`; 
+                if(tabsBar) tabsBar.appendChild(btn);
                 
-                if (g.id === activeGuideTab) {
+                if (g.id === activeGuideTab && contentsContainer) {
                     contentsContainer.innerHTML = `
                         <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm space-y-3">
                             <div class="flex justify-between items-start">
@@ -1118,59 +767,21 @@
             });
         }
 
-        function saveCurrentGuide() {
-            if(!isAdmin) return; const title = document.getElementById('input-guide-title').value.trim(); 
-            if(!title) { showToast("請點選攻略右上角的編輯鈕載入數據！", true); return; }
-            const idx = guideData.findIndex(g => g.id === activeGuideTab);
-            if (idx > -1) {
-                guideData[idx].title = title.replace(/^\d+\.\s*/, '');
-                guideData[idx].desc = document.getElementById('input-guide-desc').value.trim();
-                guideData[idx].s1 = document.getElementById('input-guide-s1').value.trim();
-                guideData[idx].s2 = document.getElementById('input-guide-s2').value.trim();
-                saveLocalTripData(); clearGuideInputs(); showToast("攻略修改成功已儲存！");
-            }
-        }
-        
-        function addUserGuide() { 
-            if(!isAdmin) return; const title = document.getElementById('input-guide-title').value.trim(); if(!title) return; 
-            const id = 'guide_' + Date.now();
-            guideData.push({ id, title: title.replace(/^\d+\.\s*/, ''), desc: document.getElementById('input-guide-desc').value.trim(), s1: document.getElementById('input-guide-s1').value.trim(), s2: document.getElementById('input-guide-s2').value.trim() }); 
-            activeGuideTab = id; saveLocalTripData(); clearGuideInputs(); showToast("成功新增攻略大類！");
-        }
-        
-        function deleteCurrentGuide() { 
-            if(!isAdmin || guideData.length <= 1) { showToast("至少需保留一個攻略大類！", true); return; }
-            guideData = guideData.filter(g => g.id !== activeGuideTab); activeGuideTab = guideData[0].id; 
-            saveLocalTripData(); clearGuideInputs(); showToast("該攻略大類已移除！");
-        }
-
         function renderPackingChecklist() {
             const groups = { docs: document.getElementById('packing-group-docs'), tech: document.getElementById('packing-group-tech'), daily: document.getElementById('packing-group-daily'), clothes: document.getElementById('packing-group-clothes'), hygiene: document.getElementById('packing-group-hygiene') };
-            Object.keys(groups).forEach(k => { if(groups[k]) groups[k].innerHTML = ''; }); let checkedCount = 0;
+            Object.keys(groups).forEach(k => { if(groups[k]) groups[k].innerHTML = ''; }); 
+            let checkedCount = 0;
+            
             packingItems.forEach((item, index) => {
-                if (item.checked) checkedCount++; const div = document.createElement('div'); div.className = `flex items-center justify-between p-2 rounded-lg border ${item.checked ? 'bg-indigo-50/40 text-slate-400 line-through' : 'bg-slate-50'}`;
+                if (item.checked) checkedCount++; 
+                const div = document.createElement('div'); div.className = `flex items-center justify-between p-2 rounded-lg border ${item.checked ? 'bg-indigo-50/40 text-slate-400 line-through' : 'bg-slate-50'}`;
                 div.innerHTML = `<label class="flex items-center space-x-3 cursor-pointer flex-1"><input type="checkbox" onchange="togglePackingItem(${index}, this)" ${item.checked ? 'checked' : ''} class="w-4 h-4 text-brand-500"><span class="text-[0.85rem] font-semibold">${escapeHTML(item.name)}</span></label><button onclick="deletePackingItem(${index})" class="text-slate-300 hover:text-red-500 text-[0.85rem] transition active:scale-90"><i class="fa-solid fa-trash"></i></button>`;
                 if(groups[item.group]) groups[item.group].appendChild(div);
             });
-            document.getElementById('header-packing-count').innerText = `${checkedCount}/${packingItems.length}`; document.getElementById('packing-stat-text').innerText = `已打包 ${checkedCount} / ${packingItems.length}`;
-            if (document.getElementById('packing-progress-bar')) document.getElementById('packing-progress-bar').style.width = `${Math.round((checkedCount / packingItems.length) * 100)}%`;
-        }
-
-        function togglePackingItem(index, cb) { packingItems[index].checked = cb.checked; saveLocalPackingList(); renderPackingChecklist(); }
-        function addUserPackingItem() { 
-            const name = document.getElementById('input-pack-name').value.trim(); if(!name) return; 
-            packingItems.push({ name, checked: false, group: document.getElementById('input-pack-group').value }); 
-            saveLocalPackingList(); document.getElementById('input-pack-name').value = ''; renderPackingChecklist();
-        }
-        function deletePackingItem(index) { packingItems.splice(index, 1); saveLocalPackingList(); renderPackingChecklist(); }
-
-        function toggleMemberEdit() { document.getElementById('member-edit-section').classList.toggle('hidden'); }
-        function addBudgetMember() {
-            const input = document.getElementById('input-new-member'); const val = input.value.trim();
-            if(val && !budgetMembers.includes(val)) { budgetMembers.push(val); input.value = ''; saveLocalBudgetData(); }
-        }
-        function deleteBudgetMember(idx) {
-            if(confirm(`確定移除「${budgetMembers[idx]}」嗎？\n(歷史帳目將會保留)`)) { budgetMembers.splice(idx, 1); saveLocalBudgetData(); }
+            
+            const countText = document.getElementById('header-packing-count'); if(countText) countText.innerText = `${checkedCount}/${packingItems.length}`; 
+            const statText = document.getElementById('packing-stat-text'); if(statText) statText.innerText = `已打包 ${checkedCount} / ${packingItems.length}`;
+            const progressBar = document.getElementById('packing-progress-bar'); if(progressBar) progressBar.style.width = `${Math.round((checkedCount / packingItems.length) * 100)}%`;
         }
 
         function renderBudget() {
@@ -1265,17 +876,342 @@
             }
         }
 
+        // ==========================================
+        // 4. 資料更新與儲存函數 Data Update Functions
+        // ==========================================
+        function saveLocalTripData() { 
+            localStorage.setItem('gba_trip_data', JSON.stringify({ tripDays, guideData, tripWarning, dashboardInfo })); 
+        }
+
+        function saveLocalBudgetData() { 
+            localStorage.setItem('gba_budget_data', JSON.stringify({ expenses: userExpenses, members: budgetMembers })); 
+            renderBudget();
+        }
+
+        function saveLocalPackingList() { 
+            localStorage.setItem('gba_personal_packing', JSON.stringify(packingItems)); 
+        }
+
+        function loadLocalPackingList() {
+            const localData = localStorage.getItem('gba_personal_packing');
+            if (localData) { packingItems = JSON.parse(localData); } 
+            else { packingItems = JSON.parse(JSON.stringify(defaultPackingItems)); saveLocalPackingList(); }
+            renderPackingChecklist();
+        }
+
+        // Dashboard Updates
+        function updateDashboardInfo() {
+            if(!isAdmin) return;
+            dashboardInfo.title = document.getElementById('input-dash-title').value.trim();
+            dashboardInfo.desc = document.getElementById('input-dash-desc').value.trim();
+            dashboardInfo.days = document.getElementById('input-dash-days').value.trim();
+            dashboardInfo.cities = document.getElementById('input-dash-cities').value.trim();
+            dashboardInfo.transport = document.getElementById('input-dash-transport').value.trim();
+            saveLocalTripData(); renderDashboard(); showToast("首頁大盤指標資訊已更新！");
+        }
+
+        function updateWarning() {
+            if(!isAdmin) return;
+            tripWarning.title = document.getElementById('input-warn-title').value.trim();
+            tripWarning.desc = document.getElementById('input-warn-desc').value.trim();
+            saveLocalTripData(); showToast("注意事項已更新！");
+        }
+
+        // Itinerary Updates
+        function swapDay(dir) {
+            if(!isAdmin) return;
+            let currentNum = parseInt(activeDay);
+            let total = Object.keys(tripDays).length;
+            let targetNum = currentNum + dir;
+            if (targetNum > total) targetNum = 1; if (targetNum < 1) targetNum = total;
+            
+            const curData = tripDays[currentNum]; const targetData = tripDays[targetNum];
+            const tempTitle = curData.title; const tempCity = curData.city; const tempHotel = curData.hotel; const tempEvents = curData.events || [];
+            
+            curData.title = targetData.title; curData.city = targetData.city; curData.hotel = targetData.hotel; curData.events = targetData.events || [];
+            targetData.title = tempTitle; targetData.city = tempCity; targetData.hotel = tempHotel; targetData.events = tempEvents;
+            
+            activeDay = targetNum; saveLocalTripData(); showToast(`Day ${currentNum} 與 Day ${targetNum} 完整對調！`);
+            renderDashboard(); renderItineraryPage();
+        }
+
+        function addNewDay() {
+            if(!isAdmin) return;
+            const total = Object.keys(tripDays).length;
+            const newNum = total + 1;
+            tripDays[newNum] = { date: "", title: `Day ${newNum} - 新行程大綱`, city: "新城市", hotel: "未定", events: [] };
+            activeDay = newNum; saveLocalTripData(); showToast(`已成功新增 Day ${newNum}`);
+            renderDashboard(); renderItineraryPage();
+        }
+
+        function removeCurrentDay() {
+            if(!isAdmin) return;
+            const total = Object.keys(tripDays).length;
+            if(total <= 1) { showToast("至少需保留一天行程！", true); return; }
+            
+            if(confirm(`確定要刪除當前的 Day ${activeDay} 行程嗎？\n(後續天數會自動向前遞補，結構完美不中斷)`)) {
+                let newTripDays = {};
+                let newIndex = 1;
+                for(let i = 1; i <= total; i++) {
+                    if(i === parseInt(activeDay)) continue;
+                    newTripDays[String(newIndex)] = tripDays[String(i)] || tripDays[i];
+                    if(newTripDays[String(newIndex)].title && newTripDays[String(newIndex)].title.startsWith("Day ")) {
+                        newTripDays[String(newIndex)].title = newTripDays[String(newIndex)].title.replace(/^Day \d+/, `Day ${newIndex}`);
+                    }
+                    newIndex++;
+                }
+                tripDays = newTripDays;
+                if(activeDay > Object.keys(tripDays).length) { activeDay = Object.keys(tripDays).length; }
+                saveLocalTripData(); showToast("此天行程已移除，後續天數自動前移！");
+                renderDashboard(); renderItineraryPage();
+            }
+        }
+
+        function updateDayInfo() {
+            if(!isAdmin) return;
+            const newDate = document.getElementById('input-day-date').value.trim();
+            const newCity = document.getElementById('input-day-city').value.trim();
+            const newHotel = document.getElementById('input-day-hotel').value.trim();
+            const newTitle = document.getElementById('input-day-main-title').value.trim();
+            
+            if(newDate) tripDays[activeDay].date = newDate;
+            if(newCity) tripDays[activeDay].city = newCity;
+            if(newHotel) tripDays[activeDay].hotel = newHotel;
+            if(newTitle) tripDays[activeDay].title = newTitle;
+            
+            saveLocalTripData(); showToast("全域大綱變更發布同步！");
+            renderDashboard(); renderItineraryPage();
+        }
+
+        function setActiveDay(dayNum) { 
+            activeDay = dayNum; cancelEditTripEvent(); renderDashboard(); renderItineraryPage(); 
+        }
+
+        function editTripEvent(idx) {
+            if(!isAdmin) return;
+            const evt = tripDays[activeDay].events[idx];
+            document.getElementById('input-evt-time').value = evt.time || '隨時';
+            document.getElementById('input-evt-title').value = evt.title || '';
+            document.getElementById('input-evt-icon').value = evt.icon || 'landmark';
+            document.getElementById('input-evt-task').value = evt.isTask ? 'true' : 'false';
+            document.getElementById('input-evt-desc').value = evt.desc || '';
+            editEventIndex = idx;
+            
+            document.getElementById('label-add-edit').innerText = "編輯目前行程活動項目";
+            const btn = document.getElementById('btn-submit-evt');
+            btn.innerHTML = '儲存活動修改';
+            btn.className = 'flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-sm transition active:scale-95 shadow-sm';
+            document.getElementById('btn-cancel-evt').classList.remove('hidden');
+            document.getElementById('input-evt-time').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function cancelEditTripEvent() {
+            editEventIndex = -1;
+            if(document.getElementById('input-evt-time')) document.getElementById('input-evt-time').value = '';
+            if(document.getElementById('input-evt-title')) document.getElementById('input-evt-title').value = '';
+            if(document.getElementById('input-evt-desc')) document.getElementById('input-evt-desc').value = '';
+            if(document.getElementById('label-add-edit')) document.getElementById('label-add-edit').innerText = "在當前天數新增行程";
+            
+            const btn = document.getElementById('btn-submit-evt');
+            if(btn) {
+                btn.innerHTML = '加入今日計畫';
+                btn.className = 'flex-1 bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-sm transition active:scale-95 shadow-sm';
+            }
+            const cancelBtn = document.getElementById('btn-cancel-evt'); if(cancelBtn) cancelBtn.classList.add('hidden');
+        }
+
+        function moveTripEvent(idx, dir) {
+            if(!isAdmin) return;
+            const events = tripDays[activeDay].events;
+            if (dir === -1 && idx > 0) { [events[idx], events[idx - 1]] = [events[idx - 1], events[idx]]; } 
+            else if (dir === 1 && idx < events.length - 1) { [events[idx], events[idx + 1]] = [events[idx + 1], events[idx]]; }
+            saveLocalTripData(); renderItineraryPage();
+        }
+
+        function addTripEvent() {
+            if(!isAdmin) return; 
+            const titleVal = document.getElementById('input-evt-title').value.trim(); 
+            if (!titleVal) { showToast("請填寫活動項目名稱！", true); return; }
+            
+            const newEvt = { 
+                title: titleVal,
+                time: document.getElementById('input-evt-time').value.trim() || "隨時", 
+                icon: document.getElementById('input-evt-icon').value || "landmark", 
+                isTask: document.getElementById('input-evt-task').value === "true", 
+                desc: document.getElementById('input-evt-desc').value.trim() 
+            };
+
+            if (editEventIndex > -1) {
+                tripDays[activeDay].events[editEventIndex] = newEvt;
+                cancelEditTripEvent(); showToast("活動項目已成功儲存更新！");
+            } else {
+                if(!tripDays[activeDay].events) tripDays[activeDay].events = [];
+                tripDays[activeDay].events.push(newEvt);
+                document.getElementById('input-evt-title').value = ''; 
+                document.getElementById('input-evt-desc').value = '';
+                document.getElementById('input-evt-time').value = '';
+                showToast("已加入今天的新計畫！");
+            }
+            saveLocalTripData(); renderItineraryPage();
+        }
+
+        function deleteTripEvent(idx) { 
+            if(!isAdmin) return; 
+            if(confirm("確定要刪除此項活動嗎？")) { tripDays[activeDay].events.splice(idx, 1); saveLocalTripData(); renderItineraryPage(); }
+        }
+
+        // Guides Updates
+        function clearGuideInputs() {
+            if(document.getElementById('input-guide-title')) document.getElementById('input-guide-title').value = '';
+            if(document.getElementById('input-guide-desc')) document.getElementById('input-guide-desc').value = '';
+            if(document.getElementById('input-guide-s1')) document.getElementById('input-guide-s1').value = '';
+            if(document.getElementById('input-guide-s2')) document.getElementById('input-guide-s2').value = '';
+        }
+
+        function loadGuideForEdit(id) {
+            if(!isAdmin) return; activeGuideTab = id; const g = guideData.find(x => x.id === id);
+            if(g) {
+                document.getElementById('input-guide-title').value = g.title;
+                document.getElementById('input-guide-desc').value = g.desc || '';
+                document.getElementById('input-guide-s1').value = g.s1 || '';
+                document.getElementById('input-guide-s2').value = g.s2 || '';
+                document.getElementById('input-guide-title').scrollIntoView({behavior: 'smooth', block: 'center'});
+                showToast("攻略已載入，可於下方表單開始編輯！"); renderGuidesPage();
+            }
+        }
+
+        function saveCurrentGuide() {
+            if(!isAdmin) return; const title = document.getElementById('input-guide-title').value.trim(); 
+            if(!title) { showToast("請點選攻略右上角的編輯鈕載入數據！", true); return; }
+            const idx = guideData.findIndex(g => g.id === activeGuideTab);
+            if (idx > -1) {
+                guideData[idx].title = title.replace(/^\d+\.\s*/, '');
+                guideData[idx].desc = document.getElementById('input-guide-desc').value.trim();
+                guideData[idx].s1 = document.getElementById('input-guide-s1').value.trim();
+                guideData[idx].s2 = document.getElementById('input-guide-s2').value.trim();
+                saveLocalTripData(); clearGuideInputs(); showToast("攻略修改成功已儲存！");
+            }
+        }
+        
+        function addUserGuide() { 
+            if(!isAdmin) return; const title = document.getElementById('input-guide-title').value.trim(); if(!title) return; 
+            const id = 'guide_' + Date.now();
+            guideData.push({ id, title: title.replace(/^\d+\.\s*/, ''), desc: document.getElementById('input-guide-desc').value.trim(), s1: document.getElementById('input-guide-s1').value.trim(), s2: document.getElementById('input-guide-s2').value.trim() }); 
+            activeGuideTab = id; saveLocalTripData(); clearGuideInputs(); showToast("成功新增攻略大類！");
+        }
+        
+        function deleteCurrentGuide() { 
+            if(!isAdmin || guideData.length <= 1) { showToast("至少需保留一個攻略大類！", true); return; }
+            guideData = guideData.filter(g => g.id !== activeGuideTab); activeGuideTab = guideData[0].id; 
+            saveLocalTripData(); clearGuideInputs(); showToast("該攻略大類已移除！");
+        }
+
+        // Packing Updates
+        function togglePackingItem(index, cb) { 
+            packingItems[index].checked = cb.checked; saveLocalPackingList(); renderPackingChecklist(); 
+        }
+        
+        function addUserPackingItem() { 
+            const name = document.getElementById('input-pack-name').value.trim(); if(!name) return; 
+            packingItems.push({ name, checked: false, group: document.getElementById('input-pack-group').value }); 
+            saveLocalPackingList(); document.getElementById('input-pack-name').value = ''; renderPackingChecklist();
+        }
+        
+        function deletePackingItem(index) { 
+            packingItems.splice(index, 1); saveLocalPackingList(); renderPackingChecklist(); 
+        }
+
+        function resetPersonalPackingList() {
+            if(confirm("確定要將本機的打包清單恢復成預設狀態嗎？\n(這會清除您自行新增的私人物品，並還原所有打勾狀態)")) {
+                packingItems = JSON.parse(JSON.stringify(defaultPackingItems));
+                saveLocalPackingList(); renderPackingChecklist(); showToast("個人打包清單已重置！");
+            }
+        }
+
+        // Budget Updates
+        function toggleMemberEdit() { 
+            document.getElementById('member-edit-section').classList.toggle('hidden'); 
+        }
+        
+        function addBudgetMember() {
+            const input = document.getElementById('input-new-member'); const val = input.value.trim();
+            if(val && !budgetMembers.includes(val)) { budgetMembers.push(val); input.value = ''; saveLocalBudgetData(); }
+        }
+        
+        function deleteBudgetMember(idx) {
+            if(confirm(`確定移除「${budgetMembers[idx]}」嗎？\n(歷史帳目將會保留)`)) { budgetMembers.splice(idx, 1); saveLocalBudgetData(); }
+        }
+
         function addUserExpense() { 
             const name = document.getElementById('input-exp-name').value.trim(); const cost = parseInt(document.getElementById('input-exp-cost').value); const payer = document.getElementById('input-exp-payer').value;
             if(!name || isNaN(cost) || !payer) { showToast("請完整填寫項目、金額與付款人！", true); return; }
             userExpenses.push({ name, cost, category: document.getElementById('input-exp-category').value, payer: payer }); 
             saveLocalBudgetData(); document.getElementById('input-exp-name').value = ''; document.getElementById('input-exp-cost').value = ''; 
         }
-        function deleteExpenseItem(index) { userExpenses.splice(index, 1); saveLocalBudgetData(); }
-        function clearAllExpenses() { if(confirm("確定清空全部本機帳本？")) { userExpenses = []; saveLocalBudgetData(); } }
+        
+        function deleteExpenseItem(index) { 
+            userExpenses.splice(index, 1); saveLocalBudgetData(); 
+        }
+        
+        function clearAllExpenses() { 
+            if(confirm("確定清空全部本機帳本？")) { userExpenses = []; saveLocalBudgetData(); } 
+        }
 
-        function setActiveDay(dayNum) { activeDay = dayNum; cancelEditTripEvent(); renderDashboard(); renderItineraryPage(); }
-        function showToast(m, w=false) { const t = document.getElementById('custom-toast'); document.getElementById('toast-message-text').innerText = m; t.classList.remove('hidden'); setTimeout(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; }, 50); setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 300); }, 2000); }
+        // Other Utilities
+        function exportToMarkdown() {
+            if(!isAdmin) return;
+            let md = `# ${dashboardInfo.title || '大灣區旅遊助手'}\n\n`;
+            md += `${dashboardInfo.desc || ''}\n\n`;
+            md += `- **旅行天數:** ${dashboardInfo.days || '8 天'}\n- **計畫跨城:** ${dashboardInfo.cities || '4 城'}\n- **交通工具:** ${dashboardInfo.transport || '自駕/高鐵'}\n\n`;
+
+            const totalDays = Object.keys(tripDays).length;
+            md += `## 📅 詳細行程\n\n`;
+            for(let i=1; i<=totalDays; i++) {
+                if(!tripDays[i]) continue;
+                const d = tripDays[i];
+                md += `### ${d.title || `Day ${i} (${d.city})`}\n`;
+                if(d.hotel) md += `**住宿:** ${d.hotel}\n\n`;
+                if(d.events && d.events.length > 0) {
+                    d.events.forEach(evt => {
+                        md += `- **${evt.time}** | ${evt.isTask ? '⭐ ' : ''}${evt.title}\n`;
+                        if(evt.desc) md += `    > ${evt.desc.replace(/\n/g, '\n    > ')}\n`;
+                    });
+                } else { md += `- 尚無排定細節\n`; }
+                md += `\n`;
+            }
+            md += `## 💰 記帳總覽\n\n`;
+            let totalExpense = 0; let payerTotals = {}; budgetMembers.forEach(m => payerTotals[m] = 0);
+            userExpenses.forEach(item => {
+                totalExpense += item.cost; if (payerTotals[item.payer] === undefined) payerTotals[item.payer] = 0; payerTotals[item.payer] += item.cost;
+            });
+            md += `- **整趟總花費:** NT$ ${totalExpense.toLocaleString()}\n`;
+            Object.keys(payerTotals).forEach(m => { if(payerTotals[m] > 0 || budgetMembers.includes(m)) md += `- ${m} 共支付: NT$ ${payerTotals[m].toLocaleString()}\n`; });
+            md += `\n---\n*由大灣區旅遊助手自動匯出*`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(md).then(() => { showToast("Markdown 已複製！可前往 Notion 貼上。"); })
+                    .catch(err => { fallbackCopyText(md); });
+            } else {
+                fallbackCopyText(md);
+            }
+        }
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Markdown 已複製！(相容模式)");
+            } catch (err) {
+                showToast("複製失敗，請檢查權限。", true);
+                console.error(err);
+            }
+            document.body.removeChild(textArea);
+        }
 
         function resetToDefaultTemplate() {
             if(confirm("確定重置本機資料庫至初始範本狀態嗎？\n(您所有新增的記帳、修改的行程都會被清除)")) {
@@ -1285,19 +1221,105 @@
                 showToast("重置範本成功，重新整理中..."); 
                 setTimeout(() => location.reload(), 1000);
             }
-        }}
-</script>
+        }
 
-<script>
-    // 註冊 Service Worker 讓 iPhone 支援 100% 斷網秒開
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('離線快取註冊成功！', reg))
-                .catch(err => console.log('註冊失敗：', err));
+        // ==========================================
+        // 5. 初始化加載 (放在所有宣告的最下方，避免 Reference Error)
+        // ==========================================
+        function loadLocalData() {
+            try {
+                // 1. 讀取行程與全域設定
+                const localTrip = localStorage.getItem('gba_trip_data');
+                if (localTrip) {
+                    const parsed = JSON.parse(localTrip);
+                    tripDays = parsed.tripDays || JSON.parse(JSON.stringify(defaultTripDays));
+                    guideData = parsed.guideData || JSON.parse(JSON.stringify(defaultGuides));
+                    tripWarning = parsed.tripWarning || JSON.parse(JSON.stringify(defaultTripWarning));
+                    dashboardInfo = parsed.dashboardInfo || JSON.parse(JSON.stringify(defaultDashboardInfo));
+                } else {
+                    tripDays = JSON.parse(JSON.stringify(defaultTripDays)); 
+                    guideData = JSON.parse(JSON.stringify(defaultGuides)); 
+                    tripWarning = JSON.parse(JSON.stringify(defaultTripWarning));
+                    dashboardInfo = JSON.parse(JSON.stringify(defaultDashboardInfo));
+                }
+
+                // 2. 讀取記帳本資料
+                const localBudget = localStorage.getItem('gba_budget_data');
+                if (localBudget) {
+                    const parsed = JSON.parse(localBudget);
+                    userExpenses = parsed.expenses || [];
+                    budgetMembers = parsed.members || ['我', '伴侶'];
+                } else {
+                    userExpenses = [];
+                    budgetMembers = ['我', '伴侶'];
+                }
+
+            } catch (error) {
+                console.error("本機資料解析異常，載入預設還原模式:", error);
+                tripDays = JSON.parse(JSON.stringify(defaultTripDays)); 
+                guideData = JSON.parse(JSON.stringify(defaultGuides)); 
+                tripWarning = JSON.parse(JSON.stringify(defaultTripWarning));
+                dashboardInfo = JSON.parse(JSON.stringify(defaultDashboardInfo));
+                userExpenses = []; budgetMembers = ['我', '伴侶'];
+            }
+
+            initAppRender();
+            renderBudget();
+            if (isAdmin) renderThemePicker();
+        }
+
+        // 事件監聽啟動
+        window.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('font-size-slider');
+            if (slider) {
+                slider.value = localStorage.getItem('gba_font_size') || '16';
+                slider.addEventListener('input', function() {
+                    document.documentElement.style.fontSize = this.value + 'px';
+                    localStorage.setItem('gba_font_size', this.value);
+                });
+            }
+
+            // 防止底部選單被鍵盤推擠
+            document.addEventListener('focusin', function(e) {
+                if(['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                    const nav = document.getElementById('bottom-nav');
+                    if(nav) nav.style.display = 'none';
+                }
+            });
+            document.addEventListener('focusout', function(e) {
+                if(['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                    setTimeout(() => { 
+                        const nav = document.getElementById('bottom-nav');
+                        if(nav) nav.style.display = ''; 
+                    }, 50);
+                }
+            });
+
+            // 🟢 開始呼叫讀取函數（此時前面所有的變數與渲染函數都已宣告完畢）
+            loadLocalData(); 
         });
-    }
-</script>
 
+        // 阻擋手機端多點觸控放大與雙擊縮放
+        document.addEventListener('touchstart', function (event) { if (event.touches.length > 1) event.preventDefault(); }, { passive: false });
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) event.preventDefault();
+            lastTouchEnd = now;
+        }, { passive: false });
+        document.addEventListener('gesturestart', function (event) { event.preventDefault(); });
+
+    </script>
+
+    <script>
+        // 註冊 Service Worker 讓 iPhone 支援 100% 斷網秒開
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('離線快取註冊成功！', reg))
+                    .catch(err => console.log('註冊失敗：', err));
+            });
+        }
+    </script>
 </body>
 </html>
